@@ -1,41 +1,48 @@
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
-
 /**
  * Created by Sdcxv on 2015/9/29.
  */
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class QiHuQ2 {
     public static void main(String args[]) {
         Scanner cin = new Scanner(System.in);
+        int a = 0, b = 0;
+        List<String> stringList = new ArrayList<String>();//原始数据
+        List<String> stringListResult = new ArrayList<String>();//结果集
         while (cin.hasNextInt()) {
-            int a, b;
-            Set<Integer> frinedsSet = new HashSet<Integer>();//便于去重
-            frinedsSet.add(1);//初始化老乡集
-            a = cin.nextInt();//表示N个人，但是基本无用
-            b = cin.nextInt();//表示输入为接下来N组数据
-            if (a == 0 && b == 0) break;//结束标记
-            if (b == 0) //0组关系
-                continue;//直接取下一组
-            else if (a == 0 || a == 1) {//现在只有一个人或没有人
-                for (int i = 0; i < b; i++) {//消耗接下来的b组数据
-                    a = cin.nextInt();
-                    a = cin.nextInt();
-                }
-                continue;//取下一组
+            a = cin.nextInt();
+            while (cin.hasNextLine()) {
+                b++;
+                stringList.add(cin.nextLine());
+                if (b > 3) break;
             }
-            for (int i = 0; i < b; i++) {
-                int j = cin.nextInt();//数一
-                int k = cin.nextInt();//数二
-                if (frinedsSet.contains(j) || frinedsSet.contains(k)) {//将二者加入结果集
-                    frinedsSet.add(j);
-                    frinedsSet.add(k);
+            break;
+        }
+        for (int i = 0; i < stringList.size(); i++) {
+            if (stringList.get(i).contains("@")) {//含有“@”取最后一个子串，替换原位置数据并继续
+                String[] strings = stringList.get(i).split("@");
+                stringList.set(i, strings[strings.length - 1]);
+                i--;
+            } else if (stringList.get(i).contains("#")) {//含有“#”责变换为char数组，每遇到一次就移除stringBuilder最后一位
+                char[] chars = stringList.get(i).toCharArray();
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int j = 0; j < chars.length; j++) {
+                    if (chars[j] != '#') {
+                        stringBuilder.append(chars[j]);
+                    } else {
+                        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+                    }
                 }
+                stringListResult.add(stringBuilder.toString());
+            } else {//皆无则直接加入结果集
+                stringListResult.add(stringList.get(i));
             }
-            if (frinedsSet.size() == 1)
-                System.out.println(0);
-            else
-                System.out.println(frinedsSet.size());
+        }
+        for (int i = 0; i < stringListResult.size(); i++) {//输出结果
+            System.out.println(stringListResult.get(i));
         }
     }
 }
